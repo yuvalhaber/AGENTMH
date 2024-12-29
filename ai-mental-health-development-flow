@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4834B8;
+            --primary-light: #5B46D4;
+            --secondary: #2C7BE5;
+            --accent: #6366F1;
+            --background: #F8FAFC;
+            --text-primary: #1E293B;
+            --text-secondary: #475569;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 24px;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+            position: relative;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            font-weight: 400;
+        }
+
+        .steps-container {
+            display: grid;
+            gap: 3rem;
+            padding: 1rem;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .step-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .step-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary-light), transparent);
+        }
+
+        .step-content {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .action-item {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            margin: 0.75rem 0;
+            display: inline-block;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease;
+        }
+
+        .action-item:hover {
+            transform: translateX(-5px);
+        }
+
+        .progress-line {
+            width: 2px;
+            height: 40px;
+            background: linear-gradient(var(--primary), var(--secondary));
+            margin: 1rem auto;
+            opacity: 0;
+            transform: scaleY(0);
+            transition: all 0.4s ease;
+        }
+
+        .progress-line.visible {
+            opacity: 1;
+            transform: scaleY(1);
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 2rem 1rem;
+                border-radius: 16px;
+            }
+
+            .main-title {
+                font-size: 2.5rem;
+            }
+
+            .step-card {
+                padding: 1.5rem;
+            }
+
+            .step-title {
+                font-size: 1.3rem;
+            }
+
+            .step-number {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <h1 class="main-title">השליש המלאכותי</h1>
+            <p class="subtitle">מדריך לפיתוח כלים מבוססי AI לבריאות הנפש</p>
+        </header>
+
+        <main class="steps-container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h2 class="step-title">זיהוי צורך</h2>
+                <div class="step-content">
+                    חשבו על כאב \ צורך \ בעיה שאתם מתמודדים עימה בשגרת העבודה שלכם?
+                </div>
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h2 class="step-title">תרומת AI</h2>
+                <div class="step-content">
+                    האם AI יכול לסייע לכם בבעיה זו?
+                    <div class="action-item">אם כן - המשיכו</div>
+                    אם לא - חזרו לנקודה 1 שוב
+                </div>
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h2 class="step-title">סוגיות אתיות</h2>
+                <div class="step-content">
+                    האם השימוש ב-AI חושף לבעיות אתיות קריטיות?
+                    <div class="action-item">אם כן באופן מובהק - חזרו לנקודה 1</div>
+                    אם כן, אך ניתן לצמצם סכנות - רשמו אותם ונסו להתייחס אליהם והמשיכו
+                    אם לא - המשיכו לנקודה הבאה
+                </div>
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h2 class="step-title">הסכמה מדעת</h2>
+                <div class="step-content">
+                    האם נדרשת הסכמה מדעת מהמטופל.ים שלכם לצורך שימוש בכלי זה?
+                    <div class="action-item">אם כן - המשיכו רק לאחר קבלת הסכמה</div>
+                    אם לא - המשיכו לנקודה הבאה
+                </div>
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h2 class="step-title">הטיות</h2>
+                <div class="step-content">
+                    האם השימוש בכלי יכול להיות כרוך בהטיות תרבותיות, כלכליות או מגדריות?
+                    <div class="action-item">אם כן - הכניסו התייחסות לכך בפרומפט והמשיכו</div>
+                </div>
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="step-card">
+                <div class="step-number">6</div>
+                <h2 class="step-title">ידע מקצועי</h2>
+                <div class="step-content">
+                    האם יש לכם קובץ או חומר מקצועי שיכול לסייע בבניית הכלי?
+                    <div class="action-item">אם כן - השתמשו בו</div>
+                    אם לא - נסו לנסח כמיטב יכולתכם בעצמכם את הבסיס המקצועי של הכלי, והיזהרו מ'הלוצינציות'
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // For step cards, also make the next progress line visible
+                    if (entry.target.classList.contains('step-card')) {
+                        const nextLine = entry.target.nextElementSibling;
+                        if (nextLine && nextLine.classList.contains('progress-line')) {
+                            nextLine.classList.add('visible');
+                        }
+                    }
+                }
+            });
+        }, {
+            threshold: 0.2,
+            rootMargin: '0px 0px -10% 0px'
+        });
+
+        document.querySelectorAll('.step-card, .progress-line').forEach(element => {
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>
